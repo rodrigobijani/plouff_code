@@ -17,6 +17,8 @@ The main purpose of this repository is to use plouff's method in magnetic data
 
 - [Curriculum lattes](http://lattes.cnpq.br/2331435604103641)
 
+### Colaborator
+
 **Victor Ribeiro Carreira**
 
 - [Curriculum lattes](http://lattes.cnpq.br/9663791782095105)
