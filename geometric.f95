@@ -9,6 +9,11 @@ INTEGER(KIND=DBL):: i, j, k
 
 CONTAINS
 
+! Create a class with geometric info about the polygon:
+!TYPE coords
+!   PUBLIC
+!   REAL(KIND=DP), DIMENSION(2):: x,y,z ! coordinates of a 3D polygon  
+!END TYPE coords
 
 
 
