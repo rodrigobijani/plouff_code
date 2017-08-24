@@ -1,0 +1,13 @@
+8            ! numero de vertices do poligono
+0.1 0.1 0.1  ! coordenadas x, y e z do topo (sentido horario)
+0.1 0.2 0.1
+0.2 0.2 0.1
+0.1 0.2 0.1
+0.1 0.1 0.8  ! coordenadas x, y e z da base (sentido horario)
+0.1 0.2 0.8
+0.2 0.2 0.8
+0.1 0.2 0.8
+
+
+
+
