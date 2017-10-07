@@ -1,0 +1,14 @@
+10          ! nv = number of vertices
+'dens'      ! physical property (dens = density and sus = susceptibility )
+2.50        " value of the physical property
+2.0 3.0     ! top and bottom of the prism (z1 and z2)
+0.1 0.1     ! x and y coordinates of the polygonal prism (clockwise direction)
+0.2 0.2
+0.3 0.3
+0.4 0.4
+0.5 0.5
+0.6 0.6
+0.7 0.7
+0.8 0.8
+0.9 0.9
+1.0 1.0
