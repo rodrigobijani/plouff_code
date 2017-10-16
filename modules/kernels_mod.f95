@@ -1,4 +1,4 @@
-MODULE kernels
+MODULE kernels_mod
 
 ! Module to calculate geometric sources
 USE geometric_mod, ONLY: polyprism_cls
@@ -16,7 +16,7 @@ CONTAINS
 SUBROUTINE kernelxx(xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
  IMPLICIT NONE
  TYPE(polyprism_cls), INTENT(IN) :: pp
- REAL(KIND=DP), DIMENSION(:), INTENT(IN):: xp,yp,zp
+ REAL(KIND=DP), DIMENSION(:), INTENT(IN):: xp,yp,zp ! obs points
  REAL(KIND=DP), DIMENSION(:), INTENT(OUT):: res ! result
 
  REAL(KIND=DP):: dummy,z1,z2,nverts ! variables comming from the polyprism_class
@@ -498,5 +498,46 @@ nx = SIZE(xp,1)  ! number of data points
  ENDDO
 END SUBROUTINE kernelzz
 
+!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
+!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
+!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
 
-END MODULE kernels
+SUBROUTINE dircos(incl,decl,azim,a,b,c)
+!cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+!c	OBJETIVO: CALCULAR AS COMPONENTES DE UM VETOR DADAS A INCLINAÇÃO E DECLINAÇÃO
+!c	REFERIDOS A UM AZIMUTE.
+!cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+
+!c	ENTRADAS:
+!c	incl = inclinação em relação à horizontal(em graus positivos abaixo da horizontal) 
+!c	decl = declinação em relação ao norte partindo do leste( em graus)
+!c	azim = azimute em relação ao eixo x ( em graus e positivo do leste em direção ao norte) geralmente usa-se 0
+ 
+!c	SAIDAS:
+!c	d1 = componente 1 do vetor
+!c	d2 = componente 2 do vetor
+!c	d3 = componente 3 do vetor
+
+!cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+!c	DEFINIÇÃO DAS VARIAVEIS
+!cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ IMPLICIT NONE
+ REAL(KIND=DP), INTENT(IN):: incl, decl, azim
+ REAL(KIND=DP), INTENT(OUT):: a,b,c
+ REAL(KIND=DP), PARAMETER:: pi = 2d0 * DACOS(0d0), rad = pi / 180d0
+
+!cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+!c	CALCULANDO AS COMPONENTES DO VETOR
+!cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ a = DCOS(incl * rad) * DCOS( (decl * rad) - (azim * rad) )
+ b = DCOS(incl * rad) * DSIN( (decl * rad) - (azim * rad) )
+ c = DSIN(incl * rad)
+END SUBROUTINE dircos
+
+!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
+!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
+!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
+
+
+
+END MODULE kernels_mod
