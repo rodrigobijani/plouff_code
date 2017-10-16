@@ -12,7 +12,7 @@ TYPE polyprism_cls
  REAL(KIND=DP):: z1,z2 ! top and bottom of the prism
  INTEGER:: nv ! number of vertices
  CHARACTER(LEN=4):: props ! physical property of the prism
- REAL(KIND=DP):: ppval ! value of the physical property
+ REAL(KIND=DP):: ppval, mx,my,mz ! value of the physical property  (mx,my,mz = components of magnetization of the polyprism)
 END TYPE polyprism_cls
 
 
@@ -34,7 +34,9 @@ SUBROUTINE geometric_clear(pp)
  pp%nv    = 0
  pp%ppval = 0.0
  pp%props = 'none'
-             
+ pp%mx    = 0.0
+ pp%my    = 0.0
+ pp%mz    = 0.0
 END SUBROUTINE geometric_clear
 !-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
 
