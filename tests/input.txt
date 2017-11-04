@@ -6,4 +6,4 @@
  #pp%props, name of physical properties
  #pp%inc, angle value of inclination
  #pp%dec, angle value of declination
- #azim, azimute value to dircos routine 
+ #azim, azimuth value to dircos routine
