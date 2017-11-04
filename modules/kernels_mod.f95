@@ -502,7 +502,7 @@ END SUBROUTINE kernelzz
 !-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
 !-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
 
-SUBROUTINE dircos(incl,decl,azim,a,b,c)
+SUBROUTINE dircos(inc,dec,azim,a,b,c)
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !c	OBJETIVO: CALCULAR AS COMPONENTES DE UM VETOR DADAS A INCLINAÇÃO E DECLINAÇÃO
 !c	REFERIDOS A UM AZIMUTE.
@@ -514,30 +514,17 @@ SUBROUTINE dircos(incl,decl,azim,a,b,c)
 !c	azim = azimute em relação ao eixo x ( em graus e positivo do leste em direção ao norte) geralmente usa-se 0
  
 !c	SAIDAS:
-!c	d1 = componente 1 do vetor
-!c	d2 = componente 2 do vetor
-!c	d3 = componente 3 do vetor
-
-!cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-!c	DEFINIÇÃO DAS VARIAVEIS
-!cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+!c	a = componente 1 do vetor
+!c	b = componente 2 do vetor
+!c	c = componente 3 do vetor
  IMPLICIT NONE
- REAL(KIND=DP), INTENT(IN):: incl, decl, azim
+ REAL(KIND=DP), INTENT(IN):: inc, dec, azim ! inclination, declination , azimuth of a vector
  REAL(KIND=DP), INTENT(OUT):: a,b,c
- REAL(KIND=DP), PARAMETER:: pi = 2d0 * DACOS(0d0), rad = pi / 180d0
-
-!cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-!c	CALCULANDO AS COMPONENTES DO VETOR
-!cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
- a = DCOS(incl * rad) * DCOS( (decl * rad) - (azim * rad) )
- b = DCOS(incl * rad) * DSIN( (decl * rad) - (azim * rad) )
- c = DSIN(incl * rad)
+ REAL(KIND=DP), PARAMETER:: pi = 2.0 * ACOS(0.0), rad = pi / 180.0
+ ! Vector Cartesian Components:
+ a = DCOS(inc * rad) * DCOS( (dec * rad) - (azim * rad) )
+ b = DCOS(inc * rad) * DSIN( (dec * rad) - (azim * rad) )
+ c = DSIN(inc * rad)
 END SUBROUTINE dircos
-
 !-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
-!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
-!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
-
-
-
 END MODULE kernels_mod
