@@ -47,7 +47,7 @@ OBJS = $(BLD)geometric_mod.o $(BLD)gravmag_mod.o $(BLD)kernels_mod.o
 # List all the programs: #
 ##########################
 
-TESTS = test_kernels_mod
+TESTS = test_kernels_mod test_geometric_mod test_gravmag_mod
 
 #######################
 # Define the targets: #
@@ -88,8 +88,8 @@ test_gravmag_mod: $(TEST)test_gravmag_mod.f95 $(OBJS)
 $(BLD)geometric_mod.o: $(SRC)geometric_mod.f95
 	$(F90) $(F90FLAGS) -c $(SRC)geometric_mod.f95 -o $(BLD)geometric_mod.o  
 
-$(BLD)kernels_mod.o: $(SRC)kernels_mod.f95 $(BLD) geometric_mod.o
+$(BLD)kernels_mod.o: $(SRC)kernels_mod.f95 $(BLD)geometric_mod.o
 	$(F90) $(F90FLAGS) -c $(SRC)kernels_mod.f95 -o $(BLD)kernels_mod.o 
 
-$(BLD)gravmag_mod.o: $(SRC)gravmag_mod.f95 $(BLD) geometric_mod.o $(BLD)kernels_mod.o
+$(BLD)gravmag_mod.o: $(SRC)gravmag_mod.f95 $(BLD)geometric_mod.o $(BLD)kernels_mod.o
 	$(F90) $(F90FLAGS) -c $(SRC)gravmag_mod.f95 -o $(BLD)gravmag_mod.o
