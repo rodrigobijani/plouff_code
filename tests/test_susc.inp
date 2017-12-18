@@ -1,0 +1,13 @@
+6          ! nv = number of vertices
+'susc'      ! physical property (dens = density and susc = susceptibility )
+2.50        ! value of the physical property
+45.0        ! inclination (degrees)
+12.0        ! declination (degrees)
+2.0 3.0     ! top and bottom of the polyprism (z1 and z2)
+0.1 0.1     ! x and y coordinates of the polygonal prism (clockwise direction)
+-0.2 0.2
+-0.1 0.6
+0.4 0.66
+0.7 0.44
+0.81 -0.3
+0.1 0.1
