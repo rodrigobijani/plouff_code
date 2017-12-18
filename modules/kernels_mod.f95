@@ -1,7 +1,7 @@
 MODULE kernels_mod
 
 ! Module to calculate geometric sources
-USE geometric_mod, ONLY: polyprism_cls
+USE geometric_mod, ONLY: polyprism_type
 
 
 IMPLICIT NONE
@@ -13,16 +13,16 @@ PUBLIC
 CONTAINS
 ! CREATE THE PLOUFF CALCULATIONS OF THE POTENCIAL OF 1/R FOR A PRISM WITH POLIGONAL CROSS-SECTION
 
-SUBROUTINE kernelxx(xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
+SUBROUTINE kernelxx(pp,xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
  IMPLICIT NONE
- TYPE(polyprism_cls), INTENT(IN) :: pp
+ TYPE(polyprism_type), INTENT(IN) :: pp
  REAL(KIND=DP), DIMENSION(:), INTENT(IN):: xp,yp,zp ! obs points
  REAL(KIND=DP), DIMENSION(:), INTENT(OUT):: res ! result
 
  REAL(KIND=DP):: dummy,z1,z2,nverts ! variables comming from the polyprism_class
  !REAL(KIND=DP):: z1e,z2e
- INTEGER(KIND=DP):: nx ,nv ! number of vertices in the pp class
- REAL(KIND=DP), ALLOCATABLE, DIMENSION(:) x, y, z1e, z2e, z1_sqr, z2_sqr, x1, x2, y1, y2, dx, dy, n, g, dist, cross, p, d1, d2 &
+ INTEGER(KIND=DP):: nx ,nv, ierr ! nv = number of vertices in the pp class , ierr = to get error during allocating arrays
+ REAL(KIND=DP), ALLOCATABLE, DIMENSION(:) :: x, y, z1e, z2e, z1_sqr, z2_sqr, x1, x2, y1, y2, dx, dy, n, g, dist, cross, p, d1, d2, &
  v1_sqr, v2_sqr, r11, r12, r21, r22 , atan_diff_d2, atan_diff_d1
 
 ! Check dimensionality:
@@ -35,15 +35,20 @@ nx = SIZE(xp,1)  ! number of data points
 ! Dummy variable for singularity points:
  dummy = 1e-10
 ! Get polygon info:
- z1 = pp%z1 
- z2 = pp%z2
- nv = pp%nv
+ z1 = pp%z1  ! top of the prism
+ z2 = pp%z2  ! bottom of the prism
+ nv = pp%nv  ! number of vertices
 ! Allocating local arrays:
- ALLOCATE(x(nv), y(nv), z1e(nx), z2e(nx), z1_sqr(nx), z2_sqr(nx), x1(nx), x2(nx), dx(nx), dy(nx), n(nx), g(nx), dist(nx), &
- cross(nx), p(nx), d1(nx), d2(nx), v1_sqr(nx), v2_sqr(nx), r11(nx), r12(nx), r21(nx), r22(nx), atan_diff_d2(nx), atan_diff_d1(nx),&
- tmp(nx) ) 
-x  = pp%xv ! pp = object (polyprism_class) and xv is an array inside pp
-y  = pp%yv
+ ALLOCATE( x(nv), y(nv), z1e(nx), z2e(nx), z1_sqr(nx), z2_sqr(nx), x1(nx), x2(nx), dx(nx), dy(nx), n(nx), g(nx), dist(nx), &
+ cross(nx), p(nx), d1(nx), d2(nx), v1_sqr(nx), v2_sqr(nx), r11(nx), r12(nx), r21(nx), r22(nx), atan_diff_d2(nx), &
+ atan_diff_d1(nx), tmp(nx), STAT=ierr )
+
+ IF(ierr /= 0)THEN
+   PRINT*, 'error while allocating arrays of kernels_mod.f95'
+   RETURN
+ ENDIF 
+ x  = pp%xv ! pp = object (polyprism_class) and xv is an array inside pp
+ y  = pp%yv
 ! Calculate the effect of the prism
 ! dealing with z coordinates of the polygon:
  z1e = z1 - zp
@@ -92,9 +97,9 @@ END SUBROUTINE kernelxx
 !##############################################################
 !##############################################################
 
-SUBROUTINE kernelxy(xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
+SUBROUTINE kernelxy(pp,xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
  IMPLICIT NONE
- TYPE(polyprism_cls), INTENT(IN) :: pp
+ TYPE(polyprism_type), INTENT(IN) :: pp
  REAL(KIND=DP), DIMENSION(:), INTENT(IN):: xp,yp,zp
  REAL(KIND=DP), DIMENSION(:), INTENT(OUT):: res ! result
 
@@ -174,9 +179,9 @@ END SUBROUTINE kernelxy
 !##############################################################
 !##############################################################
 
-SUBROUTINE kernelyy(xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
+SUBROUTINE kernelyy(pp,xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
  IMPLICIT NONE
- TYPE(polyprism_cls), INTENT(IN) :: pp
+ TYPE(polyprism_type), INTENT(IN) :: pp
  REAL(KIND=DP), DIMENSION(:), INTENT(IN):: xp,yp,zp
  REAL(KIND=DP), DIMENSION(:), INTENT(OUT):: res ! result
 
@@ -255,9 +260,9 @@ END SUBROUTINE kernelyy
 !##############################################################
 !##############################################################
 
-SUBROUTINE kernelxz(xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
+SUBROUTINE kernelxz(pp,xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
  IMPLICIT NONE
- TYPE(polyprism_cls), INTENT(IN) :: pp
+ TYPE(polyprism_type), INTENT(IN) :: pp
  REAL(KIND=DP), DIMENSION(:), INTENT(IN):: xp,yp,zp
  REAL(KIND=DP), DIMENSION(:), INTENT(OUT):: res ! result
 
@@ -342,9 +347,9 @@ END SUBROUTINE kernelxz
 !##############################################################
 !##############################################################
 
-SUBROUTINE kernelyz(xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
+SUBROUTINE kernelyz(pp,xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
  IMPLICIT NONE
- TYPE(polyprism_cls), INTENT(IN) :: pp
+ TYPE(polyprism_type), INTENT(IN) :: pp
  REAL(KIND=DP), DIMENSION(:), INTENT(IN):: xp,yp,zp
  REAL(KIND=DP), DIMENSION(:), INTENT(OUT):: res ! result
 
@@ -430,9 +435,9 @@ END SUBROUTINE kernelyz
 !##############################################################
 !##############################################################
 
-SUBROUTINE kernelzz(xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
+SUBROUTINE kernelzz(pp,xp,yp,zp,res) ! res é um vetor cuja a dimensao esta associada ao numero de pontos de obs
  IMPLICIT NONE
- TYPE(polyprism_class), INTENT(IN) :: pp
+ TYPE(polyprism_type), INTENT(IN) :: pp
  REAL(KIND=DP), DIMENSION(:), INTENT(IN):: xp,yp,zp
  REAL(KIND=DP), DIMENSION(:), INTENT(OUT):: res ! result
 
