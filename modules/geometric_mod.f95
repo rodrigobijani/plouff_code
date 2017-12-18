@@ -25,9 +25,6 @@ SUBROUTINE geometric_clear(pp)
  ! Clears the object.
  IMPLICIT NONE
  TYPE(polyprism_type), INTENT(INOUT) :: pp
-
- ! Clear all allocated arrays:
- CALL geometric_clear(pp)
  ! Set default values for all variables in pp object:
  pp%z1    = 0.0
  pp%z2    = 0.0
@@ -36,6 +33,7 @@ SUBROUTINE geometric_clear(pp)
  pp%props = 'none'
  pp%inc    = 0.0
  pp%dec    = 0.0
+ CALL geometric_deallocate(pp)
 END SUBROUTINE geometric_clear
 !-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
 
@@ -49,19 +47,19 @@ END SUBROUTINE geometric_deallocate
 !-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
 
 SUBROUTINE geometric_allocate(pp)
-IMPLICIT NONE
-TYPE(polyprism_type), INTENT(INOUT):: pp
-INTEGER(KIND=DP):: nv,ierr
-! Allocate the arrays in pp:
-nv = pp%nv
-ALLOCATE(pp%xv(nv), pp%yv(nv), STAT=ierr )
-IF(ierr /= 0)THEN
-  PRINT*, 'error while allocating arrays of polyprism_type'
-  RETURN
-ENDIF
-! initializing arrays:
-pp%xv = 0.0
-pp%yv = 0.0
+ IMPLICIT NONE
+ TYPE(polyprism_type), INTENT(INOUT):: pp
+ INTEGER(KIND=DP):: nv,ierr
+ ! Allocate the arrays in pp:
+ nv = pp%nv
+ ALLOCATE(pp%xv(nv), pp%yv(nv), STAT=ierr )
+ IF(ierr /= 0)THEN
+   PRINT*, 'error while allocating arrays of polyprism_type'
+   RETURN
+ ENDIF
+ ! initializing arrays:
+ pp%xv = 0.0
+ pp%yv = 0.0
 END SUBROUTINE geometric_allocate
 !-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
 
@@ -73,6 +71,9 @@ CHARACTER(LEN=*), INTENT(IN):: inputfile ! name of inputfile
 INTEGER(KIND=DP), INTENT(IN):: fid ! number of the inputfile
 LOGICAL:: ok
 INTEGER:: i, ierr
+
+! Clear the object:
+CALL geometric_clear(pp)
 
 ! CHECK IF THE FILE REALLY EXISTIS:
 INQUIRE(FILE=TRIM(inputfile),EXIST=ok) ! PURE functions can't do any I/O
@@ -86,21 +87,15 @@ INQUIRE(FILE=TRIM(inputfile),EXIST=ok) ! PURE functions can't do any I/O
  IF (ierr/=0) PRINT*, 'problems during openning file :' // TRIM(inputfile)
 
  ! READ parameters in the order proposed in the input file:
- 
 !-------------- nv ------------------:
  READ(UNIT=fid, FMT=*,IOSTAT=ierr) pp%nv
  IF(ierr/=0) THEN
    PRINT*,'error during reading number of vertices in geometric_mod.'
    STOP
  ENDIF
-!-----!-----!-----!-(xv,yv)----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
- DO i=1,pp%nv
-   READ(UNIT=fid, FMT=*, IOSTAT=ierr) pp%xv(i), pp%yv(i)
-   IF (ierr/=0) THEN
-     PRINT*,'error during reading vertices of the polyprism in geometric_mod.'
-     STOP
-   ENDIF 
- ENDDO
+! allocate array dependent on pp%nv parameter:
+ CALL geometric_allocate(pp)
+
  !-------------- z1 ------------------:
 READ(UNIT=fid, FMT=*,IOSTAT=ierr) pp%z1
  IF (ierr/=0) THEN
@@ -125,18 +120,34 @@ READ(UNIT=fid, FMT=*,IOSTAT=ierr) pp%props
    PRINT*,'error during reading type of physical property in geometric_mod.'
    STOP
  ENDIF
-!-------------- inc --------------------:
-READ(UNIT=fid, FMT=*,IOSTAT=ierr) pp%inc
- IF(ierr/=0) THEN
-   PRINT*,'error during reading inclination in geometric_mod.'
-   STOP
- ENDIF
-!-------------- dec --------------------:
-READ(UNIT=fid, FMT=*,IOSTAT=ierr) pp%dec
- IF(ierr/=0) THEN
-   PRINT*,'error during reading declination in geometric_mod.'
-   STOP
- ENDIF 
+
+! check for magnetic case (where inclination and declination are necessary):
+ IF(pp%props == 'susc')THEN  ! read inc and dec values
+   !-------------- inc --------------------:
+   READ(UNIT=fid, FMT=*,IOSTAT=ierr) pp%inc
+   IF(ierr/=0) THEN
+     PRINT*,'error during reading inclination in geometric_mod.'
+     STOP
+   ENDIF
+   !-------------- dec --------------------:
+   READ(UNIT=fid, FMT=*,IOSTAT=ierr) pp%dec
+   IF(ierr/=0) THEN
+     PRINT*,'error during reading declination in geometric_mod.'
+     STOP
+   ENDIF 
+   
+ ELSE IF(pp%props == 'dens')THEN ! read the xv and yv directly
+   !-----!-----!-----!-(xv,yv)----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
+   DO i=1,pp%nv
+     READ(UNIT=fid, FMT=*, IOSTAT=ierr) pp%xv(i), pp%yv(i)
+     IF (ierr/=0) THEN
+       PRINT*,'error during reading vertices of the polyprism in geometric_mod.'
+       STOP
+     ENDIF 
+   ENDDO
+
+  ENDIF ! Outer IF
+
 END SUBROUTINE geometric_read_inputs
 !-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!-----!
 END MODULE geometric_mod
