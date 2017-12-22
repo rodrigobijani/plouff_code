@@ -1,8 +1,3 @@
-#############################################
-# Makefile for Rodrigo's programs.          #
-#                                           #
-# Targets are:                              #
-#   make all   - test_pmoga                 #
 #                                           #
 #  make clean - rm all .o and .mod files    #
 #                all executables            #
@@ -41,13 +36,15 @@ F90FLAGS = -g -fbounds-check -fbacktrace -ffpe-trap=invalid,zero,overflow,underf
 # List all the .o files: #
 ##########################
 
-OBJS = $(BLD)geometric_mod.o $(BLD)gravmag_mod.o $(BLD)kernels_mod.o
+OBJS = $(BLD)geometric_mod.o 
+#$(BLD)gravmag_mod.o $(BLD)kernels_mod.o
 
 ##########################
 # List all the programs: #
 ##########################
 
-TESTS = test_kernels_mod test_geometric_mod test_gravmag_mod
+TESTS = test_geometric_mod 
+#test_gravmag_mod test_kernels_mod
 
 #######################
 # Define the targets: #
