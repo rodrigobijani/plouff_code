@@ -4,7 +4,7 @@ IMPLICIT NONE
 ! Variables:
 INTEGER, PARAMETER:: SP = SELECTED_REAL_KIND(p=4, r=4)    ! Single precision 
 INTEGER, PARAMETER:: DP = SELECTED_REAL_KIND(p=8, r=8)    ! Double precision                   
-INTEGER(KIND=DP):: i, j, k
+INTEGER :: i, j, k
 
 ! Create a class with geometric info about the polygon:
 TYPE polyprism_type
@@ -49,7 +49,7 @@ END SUBROUTINE geometric_deallocate
 SUBROUTINE geometric_allocate(pp)
  IMPLICIT NONE
  TYPE(polyprism_type), INTENT(INOUT):: pp
- INTEGER(KIND=DP):: nv,ierr
+ INTEGER:: nv,ierr
  ! Allocate the arrays in pp:
  nv = pp%nv
  ALLOCATE(pp%xv(nv), pp%yv(nv), STAT=ierr )
@@ -68,7 +68,7 @@ SUBROUTINE geometric_read_inputs(pp, fid, inputfile)
 IMPLICIT NONE
 TYPE(polyprism_type), INTENT(INOUT):: pp  ! polyprism object
 CHARACTER(LEN=*), INTENT(IN):: inputfile ! name of inputfile
-INTEGER(KIND=DP), INTENT(IN):: fid ! number of the inputfile
+INTEGER, INTENT(IN):: fid ! number of the inputfile
 LOGICAL:: ok
 INTEGER:: i, ierr
 
