@@ -1,6 +1,8 @@
-6          ! nv = number of vertices
-'susc'      ! physical property (dens = density and susc = susceptibility )
+6           ! nv = number of vertices
+200         ! top of the polyprism
+300         ! bottom of the polyprism
 2.50        ! value of the physical property
+'susc'      ! physical property (dens = density and susc = susceptibility )
 45.0        ! inclination (degrees)
 12.0        ! declination (degrees)
 2.0 3.0     ! top and bottom of the polyprism (z1 and z2)
