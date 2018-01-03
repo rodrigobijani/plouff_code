@@ -1,9 +1,0 @@
- #nv, number of vertices
-  #(xv,yv), x and y coordinates of the prism
- #z1, top of the prism
- #z2, bottom of the prism
- #pp%val, physical properties
- #pp%props, name of physical properties
- #pp%inc, angle value of inclination
- #pp%dec, angle value of declination
- #azim, azimuth value to dircos routine
