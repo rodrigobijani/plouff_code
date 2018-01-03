@@ -3,8 +3,7 @@ MODULE geometric_mod
 IMPLICIT NONE
 ! Variables:
 INTEGER, PARAMETER:: SP = SELECTED_REAL_KIND(p=4, r=4)    ! Single precision 
-INTEGER, PARAMETER:: DP = SELECTED_REAL_KIND(p=8, r=8)    ! Double precision                   
-INTEGER :: i, j, k
+INTEGER, PARAMETER:: DP = SELECTED_REAL_KIND(p=8, r=8)    ! Double precision                  
 
 ! Create a class with geometric info about the polygon:
 TYPE polyprism_type
@@ -99,13 +98,13 @@ INQUIRE(FILE=TRIM(inputfile),EXIST=ok) ! PURE functions can't do any I/O
  !-------------- z1 ------------------:
 READ(UNIT=fid, FMT=*,IOSTAT=ierr) pp%z1
  IF (ierr/=0) THEN
-   PRINT*,'error during reading top and bottom of the polyprism in geometric_mod.'
+   PRINT*,'error during reading top of the polyprism in geometric_mod.'
    STOP
  ENDIF
  !-------------- z2 ------------------:
 READ(UNIT=fid, FMT=*,IOSTAT=ierr) pp%z2
  IF (ierr/=0) THEN
-   PRINT*,'error during reading top and bottom of the polyprism in geometric_mod.'
+   PRINT*,'error during reading bottom of the polyprism in geometric_mod.'
    STOP
  ENDIF
 !-------------- ppval ------------------: 
